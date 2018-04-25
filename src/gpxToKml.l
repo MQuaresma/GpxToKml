@@ -4,19 +4,20 @@
 %{
 void printHead();
 void printFinal();
+char *lat;
 %}
 
 %%
 \<trk\>                                     {BEGIN TRACKPOINTS; printHead();}
 <TRACKPOINTS>\<trkpt                        {BEGIN TRACKPOINT;}
-<TRACKPOINT>(lat|lon)=\"[0-9]+\.[0-9]+\"    {printf("%s, ",strndup(yytext+5,strlen(yytext+5)-1));}
-<TRACKPOINT>\<\/trkpt\>                     {printf("0\n"); BEGIN TRACKPOINTS;}
+<TRACKPOINT>lat=\"[-+]?[0-9]+\.[0-9]+\"    {lat=strndup(yytext+5,strlen(yytext+5)-1);}
+<TRACKPOINT>lon=\"[-+]?[0-9]+\.[0-9]+\"    {printf("%s,%s,0\n",strndup(yytext+5,strlen(yytext+5)-1),lat);BEGIN TRACKPOINTS;}
 <TRACKPOINTS>\<\/trk\>                      {BEGIN INITIAL; printFinal();}
 <*>.|\n                                     {}
 %%
 
 void printHead(){
-    printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
     printf("<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n");
     printf("<Document>\n");
     printf("<Placemark>\n");

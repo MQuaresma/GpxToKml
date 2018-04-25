@@ -7,3 +7,11 @@
 **/*.log
 **/*.cls
 **/*.pdf
+
+# macOS
+**/.DS_Store
+**/._*
+
+# Others
+**/*.out
+**/*.c
