@@ -9,22 +9,31 @@ char *lat;
 %}
 
 %%
-\<trk\>                                                         {BEGIN TRACKPOINTS; printHead();}
-<TRACKPOINTS>\<trkpt                                            {BEGIN TRACKPOINT;}
-<TRACKPOINTS>\<name\>(.*)?\<\/name\>                            {BEGIN DESCRIPTION;printf("<description>\n");} 
-<TRACKPOINTS>\<trkseg\>                                         {printLine();}
-<TRACKPOINT>lat=\"[-+]?[0-9]+(\.[0-9]+)?\"                      {lat=strndup(yytext+5,strlen(yytext+5)-1);}
-<TRACKPOINT>lon=\"[-+]?[0-9]+(\.[0-9]+)?\"                      {printf("%s,%s,",strndup(yytext+5,strlen(yytext+5)-1),lat);}
-<TRACKPOINT>\<ele\>[-+]?[0-9]+(\.[0-9]+)?\<\/ele\>              {printf("%s\n",strndup(yytext+5,strlen(yytext+5)-6));BEGIN TRACKPOINTS;}
-<TRACKPOINTS>\<\/trk\>                                          {BEGIN INITIAL; printFinal();}
-<TRACKPOINTS>\<gpxtrkx:TrackStatsExtension(.*)?\>               {BEGIN DESCRIPTION;printf("<description>\n");}
-<DESCRIPTION>\<type\>(.*)?/\<\/type\>                           {printf("Type:%s\n",yytext+6);}
-<DESCRIPTION>\<gpxtrkx:Distance\>(.*)?/\<\/gpxtrkx:Distance\>   {printf("Distance: %s m\n",yytext+18);};
-<DESCRIPTION>\<gpxtrkx:Ascent\>(.*)?/\<\/gpxtrkx:Ascent\>       {printf("D+: %s m\n",yytext+16);};
-<DESCRIPTION>\<gpxtrkx:Descent\>(.*)?/\<\/gpxtrkx:Descent\>     {printf("D-: %s m\n",yytext+17);};
-<DESCRIPTION>\<gpxtrkx:Calories\>(.*)?/\<\/gpxtrkx:Calories\>   {printf("Calories: %s\n",yytext+18);};
-<DESCRIPTION>\<trkseg\>                                         {BEGIN TRACKPOINTS; printf("</description>\n"); printLine();}
-<*>.|\n                                                         {}
+\<trk\>                                            {BEGIN TRACKPOINTS; printHead();}
+
+<TRACKPOINTS>{
+\<trkpt                                            {BEGIN TRACKPOINT;}
+\<name\>(.*)?\<\/name\>                            {BEGIN DESCRIPTION; printf("%s\n",yytext); printf("<description>\n");} 
+\<gpxtrkx:TrackStatsExtension(.*)?\>               {BEGIN DESCRIPTION; printf("<description>\n");}
+\<\/trk\>                                          {BEGIN INITIAL; printFinal();}
+}
+
+<TRACKPOINT>{
+lat=\"[-+]?[0-9]+(\.[0-9]+)?\"                      {lat=strndup(yytext+5,strlen(yytext+5)-1);}
+lon=\"[-+]?[0-9]+(\.[0-9]+)?\"                      {printf("%s,%s,",strndup(yytext+5,strlen(yytext+5)-1),lat);}
+\<ele\>[-+]?[0-9]+(\.[0-9]+)?\<\/ele\>              {printf("%s\n",strndup(yytext+5,strlen(yytext+5)-6)); BEGIN TRACKPOINTS;}
+}
+
+<DESCRIPTION>{
+\<type\>(.*)?/\<\/type\>                           {printf("Type:%s\n",yytext+6);}
+\<gpxtrkx:Distance\>(.*)?/\<\/gpxtrkx:Distance\>   {printf("Distance: %s m\n",yytext+18);};
+\<gpxtrkx:Ascent\>(.*)?/\<\/gpxtrkx:Ascent\>       {printf("D+: %s m\n",yytext+16);};
+\<gpxtrkx:Descent\>(.*)?/\<\/gpxtrkx:Descent\>     {printf("D-: %s m\n",yytext+17);};
+\<gpxtrkx:Calories\>(.*)?/\<\/gpxtrkx:Calories\>   {printf("Calories: %s\n",yytext+18);};
+\<trkseg\>                                         {BEGIN TRACKPOINTS; printf("</description>\n"); printLine();}
+}
+
+<*>.|\n                                            {}
 %%
 
 void printHead(){
