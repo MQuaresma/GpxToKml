@@ -29,6 +29,7 @@ void printHead(){
 
 void printLine(){
     printf("<LineString>\n");
+    printf("<altitudeMode>absolute</altitudeMode>\n");
     printf("<coordinates>\n");
 }
 
