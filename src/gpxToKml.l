@@ -1,27 +1,35 @@
 %option main
-%x TRACKPOINTS TRACKPOINT DESCRIPTION
+%x TRACKPOINTS TRACKPOINT DESCRIPTION WAYPOINT
 
 %{
 void printHead();
 void printFinal();
 void printLine();
+void printFinalTrackPoints();
 char *lat;
 %}
 
 %%
-\<trk\>                                            {BEGIN TRACKPOINTS; printHead();}
+\<gpx                                              {printHead();}
+\<trk\>                                            {BEGIN TRACKPOINTS; printf("<Placemark>\n");}
+\<\/gpx\>                                          {printFinal();}
+\<wpt                                              {BEGIN WAYPOINT; printf("<Placemark>\n");}
+
+<WAYPOINT>{
+\<\/wpt\>                                          {BEGIN INITIAL; printf("</Placemark>\n");}
+}
 
 <TRACKPOINTS>{
 \<trkpt                                            {BEGIN TRACKPOINT;}
 \<name\>(.*)?\<\/name\>                            {BEGIN DESCRIPTION; printf("%s\n",yytext); printf("<description>\n");} 
 \<gpxtrkx:TrackStatsExtension(.*)?\>               {BEGIN DESCRIPTION; printf("<description>\n");}
-\<\/trk\>                                          {BEGIN INITIAL; printFinal();}
+\<\/trk\>                                          {BEGIN INITIAL; printFinalTrackPoints();}
 }
 
 <TRACKPOINT>{
-lat=\"[-+]?[0-9]+(\.[0-9]+)?\"                      {lat=strndup(yytext+5,strlen(yytext+5)-1);}
-lon=\"[-+]?[0-9]+(\.[0-9]+)?\"                      {printf("%s,%s,",strndup(yytext+5,strlen(yytext+5)-1),lat);}
-\<ele\>[-+]?[0-9]+(\.[0-9]+)?\<\/ele\>              {printf("%s\n",strndup(yytext+5,strlen(yytext+5)-6)); BEGIN TRACKPOINTS;}
+lat=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {lat=strndup(yytext+5,strlen(yytext+5)-1);}
+lon=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {printf("%s,%s,",strndup(yytext+5,strlen(yytext+5)-1),lat);}
+\<ele\>[-+]?[0-9]+(\.[0-9]+)?\<\/ele\>             {printf("%s\n",strndup(yytext+5,strlen(yytext+5)-6)); BEGIN TRACKPOINTS;}
 }
 
 <DESCRIPTION>{
@@ -40,7 +48,6 @@ void printHead(){
     printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
     printf("<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n");
     printf("<Document>\n");
-    printf("<Placemark>\n");
 }
 
 void printLine(){
@@ -49,10 +56,13 @@ void printLine(){
     printf("<coordinates>\n");
 }
 
-void printFinal(){
+void printFinalTrackPoints(){
     printf("</coordinates>\n");
     printf("</LineString>\n");
     printf("</Placemark>\n");
+}
+
+void printFinal(){
     printf("</Document>\n");
     printf("</kml>\n");
 }
