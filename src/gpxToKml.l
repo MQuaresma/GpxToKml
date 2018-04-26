@@ -74,6 +74,7 @@ lon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                    {printf("<Point>\n<coordinate
 
 <TRACKPOINTS>{
 \<trkpt                                            {BEGIN TRACKPOINT;}
+\<trkseg\>                                         {BEGIN TRACKPOINT; printLine();}
 \<name\>(.*)?\<\/name\>                            {BEGIN DESCRIPTION; printf("%s\n",yytext); printf("<description>\n");} 
 \<gpxtrkx:TrackStatsExtension(.*)?\>               {BEGIN DESCRIPTION; printf("<description>\n");}
 \<\/trk\>                                          {BEGIN INITIAL; printFinalTrackPoints();}
@@ -92,7 +93,7 @@ lon=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {printf("%s,%s,",strndup(yyte
 \<gpxtrkx:Ascent\>(.*)?/\<\/gpxtrkx:Ascent\>       {printf("D+: %s m\n",yytext+16);};
 \<gpxtrkx:Descent\>(.*)?/\<\/gpxtrkx:Descent\>     {printf("D-: %s m\n",yytext+17);};
 \<gpxtrkx:Calories\>(.*)?/\<\/gpxtrkx:Calories\>   {printf("Calories: %s\n",yytext+18);};
-\<trkseg\>                                         {BEGIN TRACKPOINTS; printf("</description>\n"); printLine();}
+\<trkseg\>                                         {BEGIN TRACKPOINT; printf("</description>\n"); printLine();}
 }
 
 <*>.|\n                                            {}
