@@ -6,9 +6,9 @@ void printHead();
 void printFinal();
 void printLine();
 void printFinalTrackPoints();
-char *lat;
 char stackLink[15];
 int linkP=0;
+char *tmp;
 int descTag=0;
 %}
 
@@ -55,15 +55,20 @@ href=\"(.*)?/\"                                    {printf("%s ",yytext+6);}
 }
 
 <BOUNDS>{
-minlat=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MinLatitude: %d ",yytext+8);}
-minlon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MinLongitude: %d ",yytext+8);}
-maxlat=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MaxLatitude: %d ",yytext+8);}
-maxlon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MaxLongitude: %d ",yytext+8);}
+minlat=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MinLatitude: %s ",yytext+8);}
+minlon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MinLongitude: %s ",yytext+8);}
+maxlat=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MaxLatitude: %s ",yytext+8);}
+maxlon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MaxLongitude: %s ",yytext+8);}
 \/\>                                               {BEGIN METADATA; printf("\n");}
 }
 
 
 <WAYPOINT>{
+\<name\>(.*)?\<\/name\>                            {printf("%s\n",yytext);}
+\<desc\>(.*)?/\<\/desc\>                           {printf("<description>%s</description>\n",yytext+6);}
+lat=\"[-+]?[0-9]+(\.[0-9]+)?/\"                    {tmp=strndup(yytext+5,strlen(yytext-5));}
+lon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                    {printf("<Point>\n<coordinates>%s,%s,",yytext+5,tmp);}
+\<ele\>[-+]?[0-9]+(\.[0-9]+)?/\<\/ele\>            {printf("%s</coordinates>\n</Point>\n", yytext+5);}
 \<\/wpt\>                                          {BEGIN INITIAL; printf("</Placemark>\n");}
 }
 
@@ -75,8 +80,8 @@ maxlon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MaxLongitude: %d ",y
 }
 
 <TRACKPOINT>{
-lat=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {lat=strndup(yytext+5,strlen(yytext+5)-1);}
-lon=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {printf("%s,%s,",strndup(yytext+5,strlen(yytext+5)-1),lat);}
+lat=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {tmp=strndup(yytext+5,strlen(yytext+5)-1);}
+lon=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {printf("%s,%s,",strndup(yytext+5,strlen(yytext+5)-1),tmp);}
 \<ele\>[-+]?[0-9]+(\.[0-9]+)?\<\/ele\>             {printf("%s\n",strndup(yytext+5,strlen(yytext+5)-6)); BEGIN TRACKPOINTS;}
 }
 
