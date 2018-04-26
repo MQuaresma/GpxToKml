@@ -6,7 +6,7 @@ void printHead();
 void printFinal();
 void printLine();
 void printFinalTrackPoints();
-char *lat;
+char *tmp;
 int descTag=0;
 %}
 
@@ -23,7 +23,7 @@ int descTag=0;
 \<copyright\>                                      {if(!descTag){printf("<description>\n");descTag=1;} BEGIN COPYRIGHT; printf("Copyright: ");}
 \<link\>                                           {if(!descTag){printf("<description>\n");descTag=1;} BEGIN LINK; printf("Link: ");}
 \<keywords\>(.*)?/\<\/keywords\>                   {if(!descTag){printf("<description>\n");descTag=1;} printf("Keywords: %s \n",yytext+10);}
-\<bounds\>                                         {if(!descTag){printf("<description>\n");descTag=1;} BEGIN BOUNDS: printf("Bounds: ");}
+\<bounds\>                                         {if(!descTag){printf("<description>\n");descTag=1;} BEGIN BOUNDS; printf("Bounds: ");}
 \<time\>(.*)?/\<\/time\>                           {if(!descTag){printf("<description>\n");descTag=1;} printf("Time: %s \n",yytext+6);}
 \<author\>                                         {if(!descTag){printf("<description>\n");descTag=1;} BEGIN AUTHOR; printf("Author: ");}
 \<\/metadata\>                                     {BEGIN INITIAL; if(descTag){printf("</description>\n");descTag=0;}}
@@ -38,7 +38,7 @@ domain=\"(.*)?/\"                                  {printf("Domain: %s",yytext+8
 \<\/author\>                                       {BEGIN METADATA; printf("\n");}
 }
 
-<COPYRIGHT>
+<COPYRIGHT>{
 author=\"(.*)?/\"                                  {printf("Author: %s ",yytext+8);}
 \<year\>(.*)?/\<\/year\>                           {printf("Year: %s",yytext+6);}
 \<license\>(.*)?/\<\/license\>                     {printf("License: %s",yytext+9);}
@@ -53,15 +53,20 @@ href=\"(.*)?/\"                                    {printf("%s ",yytext+6);}
 }
 
 <BOUNDS>{
-minlat=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MinLatitude: %d ",yytext+8);}
-minlon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MinLongitude: %d ",yytext+8);}
-maxlat=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MaxLatitude: %d ",yytext+8);}
-maxlon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MaxLongitude: %d ",yytext+8);}
+minlat=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MinLatitude: %s ",yytext+8);}
+minlon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MinLongitude: %s ",yytext+8);}
+maxlat=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MaxLatitude: %s ",yytext+8);}
+maxlon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MaxLongitude: %s ",yytext+8);}
 \/\>                                               {BEGIN METADATA; printf("\n");}
 }
 
 
 <WAYPOINT>{
+\<name\>(.*)?\<\/name\>                            {printf("%s\n",yytext);}
+\<desc\>(.*)?/\<\/desc\>                           {printf("<description>%s</description>\n",yytext+6);}
+lat=\"[-+]?[0-9]+(\.[0-9]+)?/\"                    {tmp=strndup(yytext+5,strlen(yytext-5));}
+lon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                    {printf("<Point>\n<coordinates>%s,%s,",yytext+5,tmp);}
+\<ele\>[-+]?[0-9]+(\.[0-9]+)?/\<\/ele\>            {printf("%s</coordinates>\n</Point>\n", yytext+5);}
 \<\/wpt\>                                          {BEGIN INITIAL; printf("</Placemark>\n");}
 }
 
@@ -73,8 +78,8 @@ maxlon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MaxLongitude: %d ",y
 }
 
 <TRACKPOINT>{
-lat=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {lat=strndup(yytext+5,strlen(yytext+5)-1);}
-lon=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {printf("%s,%s,",strndup(yytext+5,strlen(yytext+5)-1),lat);}
+lat=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {tmp=strndup(yytext+5,strlen(yytext+5)-1);}
+lon=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {printf("%s,%s,",strndup(yytext+5,strlen(yytext+5)-1),tmp);}
 \<ele\>[-+]?[0-9]+(\.[0-9]+)?\<\/ele\>             {printf("%s\n",strndup(yytext+5,strlen(yytext+5)-6)); BEGIN TRACKPOINTS;}
 }
 
