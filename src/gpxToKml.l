@@ -32,11 +32,11 @@ int descTag=0;
 }
 
 <AUTHOR>{
-\<name\>(.*)?\<\/name\>                            {printf("\tNome: %s \n",strndup(yytext+6,strlen(yytext+6)-7)); BEGIN METADATA;}
-\<email\>                                          {printf("\tEmail: ");}
+\<name\>(.*)?\<\/name\>                            {printf("Name: %s ",strndup(yytext+6,strlen(yytext+6)-7));}
+\<email\>                                          {printf("Email: ");}
 id=\"(.*)?/\"                                      {printf("Id: %s",yytext+4);}
 domain=\"(.*)?/\"                                  {printf("Domain: %s",yytext+8);}
-\<link\>                                           {BEGIN LINK; printf("\tLink: "); stackLink[linkP++]=AUTHOR;}
+\<link\>                                           {BEGIN LINK; printf("Link: "); stackLink[linkP++]=AUTHOR;}
 \<\/author\>                                       {BEGIN METADATA; printf("\n");}
 }
 
@@ -86,6 +86,7 @@ lon=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {printf("%s,%s,",strndup(yyte
 }
 
 <DESCRIPTION>{
+\<desc\>(.*)?/\<\/desc\>                           {printf("Desc:%s\n",yytext+6);}
 \<type\>(.*)?/\<\/type\>                           {printf("Type:%s\n",yytext+6);}
 \<gpxtrkx:Distance\>(.*)?/\<\/gpxtrkx:Distance\>   {printf("Distance: %s m\n",yytext+18);};
 \<gpxtrkx:Ascent\>(.*)?/\<\/gpxtrkx:Ascent\>       {printf("D+: %s m\n",yytext+16);};
