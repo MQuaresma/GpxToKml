@@ -7,6 +7,8 @@ void printFinal();
 void printLine();
 void printFinalTrackPoints();
 char *lat;
+char stackLink[15];
+int linkP=0;
 int descTag=0;
 %}
 
@@ -21,9 +23,9 @@ int descTag=0;
 \<name\>(.*)?\<\/name\>                            {printf("%s\n",yytext);}
 \<desc\>(.*)?/\<\/desc\>                           {if(!descTag){printf("<description>\n");descTag=1;} printf("Desc: %s \n",yytext+6);}
 \<copyright\>                                      {if(!descTag){printf("<description>\n");descTag=1;} BEGIN COPYRIGHT; printf("Copyright: ");}
-\<link\>                                           {if(!descTag){printf("<description>\n");descTag=1;} BEGIN LINK; printf("Link: ");}
+\<link\>                                           {if(!descTag){printf("<description>\n");descTag=1;} BEGIN LINK; stackLink[linkP++]=METADATA; printf("Link: ");}
 \<keywords\>(.*)?/\<\/keywords\>                   {if(!descTag){printf("<description>\n");descTag=1;} printf("Keywords: %s \n",yytext+10);}
-\<bounds\>                                         {if(!descTag){printf("<description>\n");descTag=1;} BEGIN BOUNDS: printf("Bounds: ");}
+\<bounds\>                                         {if(!descTag){printf("<description>\n");descTag=1;} BEGIN BOUNDS; printf("Bounds: ");}
 \<time\>(.*)?/\<\/time\>                           {if(!descTag){printf("<description>\n");descTag=1;} printf("Time: %s \n",yytext+6);}
 \<author\>                                         {if(!descTag){printf("<description>\n");descTag=1;} BEGIN AUTHOR; printf("Author: ");}
 \<\/metadata\>                                     {BEGIN INITIAL; if(descTag){printf("</description>\n");descTag=0;}}
@@ -34,11 +36,11 @@ int descTag=0;
 \<email\>                                          {printf("\tEmail: ");}
 id=\"(.*)?/\"                                      {printf("Id: %s",yytext+4);}
 domain=\"(.*)?/\"                                  {printf("Domain: %s",yytext+8);}
-\<link\>                                           {BEGIN LINK; printf("\tLink: ");}
+\<link\>                                           {BEGIN LINK; printf("\tLink: "); stackLink[linkP++]=AUTHOR;}
 \<\/author\>                                       {BEGIN METADATA; printf("\n");}
 }
 
-<COPYRIGHT>
+<COPYRIGHT>{
 author=\"(.*)?/\"                                  {printf("Author: %s ",yytext+8);}
 \<year\>(.*)?/\<\/year\>                           {printf("Year: %s",yytext+6);}
 \<license\>(.*)?/\<\/license\>                     {printf("License: %s",yytext+9);}
@@ -49,7 +51,7 @@ author=\"(.*)?/\"                                  {printf("Author: %s ",yytext+
 href=\"(.*)?/\"                                    {printf("%s ",yytext+6);}
 \<text\>(.*)?/\<\/text\>                           {printf("Text: %s",yytext+6);}
 \<type\>(.*)?/\<\/type\>                           {printf("Type: %s",yytext+6);}
-\<\/link\>                                         {BEGIN METADATA; printf("\n");}
+\<\/link\>                                         {BEGIN stackLink[linkP--]; printf("\n");}
 }
 
 <BOUNDS>{
