@@ -24,6 +24,7 @@ int descTag=0;
 \<desc\>(.*)?/\<\/desc\>                           {if(descTag==0){printf("<description>\n");descTag=1;} printf("Desc: %s \n",yytext+6);}
 \<copyright\>                                      {if(descTag==0){printf("<description>\n");descTag=1;} BEGIN COPYRIGHT; printf("Copyright: ");}
 \<link                                             {if(descTag==0){printf("<description>\n");descTag=1;} BEGIN LINK; stackLink[linkP++]=METADATA; printf("Link: ");}
+\<link\ href=\"(.*)?/\"\/\>                        {printf("Email: %s\n",yytext+12);}
 \<keywords\>(.*)?/\<\/keywords\>                   {if(descTag==0){printf("<description>\n");descTag=1;} printf("Keywords: %s \n",yytext+10);}
 \<bounds                                           {if(descTag==0){printf("<description>\n");descTag=1;} BEGIN BOUNDS; printf("Bounds: ");}
 \<time\>(.*)?/\<\/time\>                           {if(descTag==0){printf("<description>\n");descTag=1;} printf("Time: %s \n",yytext+6);}
@@ -37,6 +38,7 @@ int descTag=0;
 id=\"(.*)?/\"                                      {printf("Id: %s",yytext+4);}
 domain=\"(.*)?/\"                                  {printf("Domain: %s",yytext+8);}
 \<link                                             {BEGIN LINK; printf("Link: "); stackLink[linkP++]=AUTHOR;}
+\<link\ href=\"(.*)?/\"\/\>                        {printf("Email: %s\n",yytext+12);}
 \<\/author\>                                       {BEGIN METADATA; printf("\n");}
 }
 
