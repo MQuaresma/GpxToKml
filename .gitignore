@@ -7,6 +7,8 @@
 **/*.log
 **/*.cls
 **/*.pdf
+**/*.toc
+
 
 # macOS
 **/.DS_Store
