@@ -21,7 +21,7 @@ int descTag=0;
 \<metadata\>                                       {BEGIN METADATA;}
 
 <METADATA>{
-\<name\>(.*)?\<\/name\>                            {printf("%s\n",yytext);}
+\<name\>(.*)?\<\/name\>                            {if(descTag==0){printf("%s\n",yytext);}}
 \<desc\>(.*)?/\<\/desc\>                           {if(descTag==0){printf("<description>\n");descTag=1;} printf("Desc: %s \n",yytext+6);}
 \<copyright\>                                      {if(descTag==0){printf("<description>\n");descTag=1;} BEGIN COPYRIGHT; printf("Copyright: ");}
 \<link                                             {if(descTag==0){printf("<description>\n");descTag=1;} BEGIN LINK; stackLink[linkP++]=METADATA; printf("Link: ");}
@@ -39,7 +39,7 @@ int descTag=0;
 id=\"(.*)?/\"                                      {printf("Id: %s",yytext+4);}
 domain=\"(.*)?/\"                                  {printf("Domain: %s",yytext+8);}
 \<link                                             {BEGIN LINK; printf("Link: "); stackLink[linkP++]=AUTHOR;}
-\<link\ href=\"(.*)?/\"\/\>                        {printf("Email: %s\n",yytext+12);}
+\<link\ href=\"(.*)?/\"\/\>                        {printf("Email: %s",yytext+12);}
 \<\/author\>                                       {BEGIN METADATA; printf("\n");}
 }
 
