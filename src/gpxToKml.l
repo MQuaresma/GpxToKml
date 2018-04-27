@@ -5,6 +5,7 @@
 void printHead();
 void printFinal();
 void printLine();
+void printPoint();
 void printFinalTrackPoints();
 char stackLink[15];
 int linkP=0;
@@ -69,7 +70,7 @@ maxlon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                 {printf("MaxLongitude: %s ",y
 \<name\>(.*)?\<\/name\>                            {printf("%s\n",yytext);}
 \<desc\>(.*)?/\<\/desc\>                           {printf("<description>%s</description>\n",yytext+6);}
 lat=\"[-+]?[0-9]+(\.[0-9]+)?/\"                    {tmp=strndup(yytext+5,strlen(yytext-5));}
-lon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                    {printf("<Point>\n<coordinates>%s,%s,",yytext+5,tmp);}
+lon=\"[-+]?[0-9]+(\.[0-9]+)?/\"                    {printPoint(); printf("%s,%s,",yytext+5,tmp);}
 \<ele\>[-+]?[0-9]+(\.[0-9]+)?/\<\/ele\>            {printf("%s</coordinates>\n</Point>\n", yytext+5);}
 \<\/wpt\>                                          {BEGIN INITIAL; printf("</Placemark>\n");}
 }
@@ -111,6 +112,12 @@ void printLine(){
     printf("<LineString>\n");
     printf("<altitudeMode>absolute</altitudeMode>\n");
     printf("<coordinates>\n");
+}
+
+void printPoint(){
+    printf("<Point>\n");
+    printf("<altitudeMode>absolute</altitudeMode>\n");
+    printf("<coordinates>");
 }
 
 void printFinalTrackPoints(){

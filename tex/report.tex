@@ -27,7 +27,25 @@ De modo a converter um ficheiro GPX (GPS Exchange Format) para KML (Keyhole Mark
 \section{Introdução}
 
 \section{Preliminares}
-Explicar estruturas de GPX e de KML
+De modo a compreender-se melhor o que foi desenvolvido é importante conhecer as estruturas (tags) dos dois tipos. Os dois são baseados no XML (Extensible Markup Language) e como tal tem algumas parecências mudando principalmente as tags e os seus significados.
+
+Em relação à estrutura do GPX é importante referir que:
+\begin{itemize}
+    \item
+\end{itemize}
+
+Já em relação à estrutura do KML é de destacar o seguinte:
+\begin{itemize}
+    \item \verb|<?xml version="1.0" encoding="utf-8"?>|: indica a versão do XML e a condificação 
+    \item \verb|<kml xmlns="http://www.opengis.net/kml/2.2">|: indica a versão do KML usado, pode ser também adicionado extensões dentro da tag
+    \item \verb|<Placemark>|: representa como o próprio nome indica um marcador de um local/trilho/ponto/etc
+    \item \verb|<name>|: presente tanto do \verb|<Document>| como no \verb|<Placemark>| permite dar um nome ao documento ou ao local respetivamente
+    \item \verb|<description>|: como o nome permite descrever/caracterizar o \verb|<Document>| ou o \verb|<Placemark>|
+    \item \verb|<LineString>|: permite representar um caminho/trilho, deve estar dentro da tag \verb|<Placemark>|
+    \item \verb|<Point>|: permite representar um ponto/marco no mapa, deve estar dentro da tag \verb|<Placemark>|
+    \item \verb|<coordinates>|: é aqui adicionado as coordenadas e alturas de cada ponto do caminho a ser ``desenhado'' no caso de estar dentro de uma tag \verb|<LineString>|, caso esteja dentro de um \verb|<Point>| permite indicar a localização e altura do ponto, sendo que a organização é longitude,latitude,altura por cada linha
+    \item \verb|<altitudeMode>|: permite defenir que tipo de modo de altitude é usada, decidimos no nosso caso usar absolute (ou seja, a altitude é referente ao nível do mar), deve também estar dentro da tag \verb|<LineString>| ou da tag \verb|<Point>|
+\end{itemize}
 
 \section{Desenvolvimento}
 Explicar o que foi realizado, estruturas usadas e usage
