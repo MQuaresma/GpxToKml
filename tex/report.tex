@@ -24,9 +24,11 @@ e-mail: \{a78821,a77049\}@alunos.uminho.pt
 De modo a converter um ficheiro GPX (GPS Exchange Format) para KML (Keyhole Markup Language) foi usado o FLEX (fast lexical analyzer generator). Esta conversão permite que a partir de ficheiros gerados pelos gps's por exemplo seja possível ver o conteúdo guardado pelo mesmo no Google Earth (Maps.me, etc).
 \end{abstract}
 
+\section{Estrutura do Relatório}
+
 \section{Introdução}
 
-\section{Preliminares}
+\section{Preambulo}\label{pb}
 De modo a compreender-se melhor o que foi desenvolvido é importante conhecer as estruturas (tags) dos dois tipos. Os dois são baseados no XML (Extensible Markup Language) e como tal tem algumas parecências mudando principalmente as tags e os seus significados.
 
 Em relação à estrutura do GPX é importante referir que:
@@ -47,9 +49,22 @@ Já em relação à estrutura do KML é de destacar o seguinte:
     \item \verb|<altitudeMode>|: permite defenir que tipo de modo de altitude é usada, decidimos no nosso caso usar absolute (ou seja, a altitude é referente ao nível do mar), deve também estar dentro da tag \verb|<LineString>| ou da tag \verb|<Point>|
 \end{itemize}
 
-\section{Desenvolvimento}
+\section{Análise e especificação}
 Explicar o que foi realizado, estruturas usadas e usage
+\subsection{Descrição informal do problema}
+
+\subsection{Especificação do Requisitos}
+
+\section{Concepção/desenho da Resolução}
+\subsection{Estruturas usadas}
+
+\subsection{Algoritmos(Lógica)}
+
+\section{Codificação e Testes}
 
 \section{Conclusão}
+
+\appendix
+\section{Código do Programa}
 
 \end{document}
