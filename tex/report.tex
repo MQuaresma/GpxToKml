@@ -28,6 +28,7 @@ De modo a converter um ficheiro GPX (GPS Exchange Format) para KML (Keyhole Mark
 Após realizar a introdução, iremos explicar as estruturas/tags dos diferentes ficheiros/linguagens (GPX,KML) no Preâmbulo. De seguida é explicado de forma sucinta o problema presente, para de seguida apresentar a solução por nós proposta. Será depois apresentado como executar e possiveis testes a realizar. Por fim, será concluído os resultados bem como avaliar o trabalho desenvolvido.
 
 \section{Introdução}
+Para realizar a conversão de tipos foi usado o FLEX, uma ferramenta poderosa que permite criar analisadores léxicos de modo a reconhecer padrões no input e consoante o padrão agir de acordo com ele produzindo ou não output, dependendo do que é pretendido. É importante também destacar que caso não fosse usado o FLEX seria muito complicado implementar algo que desse os mesmos resultados, demorando muito mais tempo a implementar, até porque a deteção de padrões não é algo simples.
 
 \section{Preâmbulo}\label{pb}
 De modo a compreender-se melhor o que foi desenvolvido é importante conhecer as estruturas (tags) dos dois tipos. Os dois são baseados no XML (Extensible Markup Language) e como tal tem algumas parecências mudando principalmente as tags e os seus significados. 
@@ -78,17 +79,20 @@ De modo a testar deve-se usar o programa preferencialmente da seguinte maneira:
     \item Compilar o ficheiro gpxToKml.l com o FLEX: \verb|flex gpxToKml.l|
     \item Compilar o ficheiro lex.yy.c: \verb|gcc -o gpxToKml lex.yy.c|
     \item Executar: \verb|./gpxToKml < ficheiroInput.gpx > ficheiroOutput.kml|
+    \item Importar para o Google Earth, etc
 \end{itemize}
 
 Ou, devido à existência de uma Makefile realizar simplesmente:
 \begin{itemize}
     \item \verb|make install|
     \item \verb|./gpxToKml < ficheiroInput.gpx > ficheiroOutput.kml|
+    \item Importar para o Google Earth, etc
 \end{itemize}
 
 Sendo também possivel com a Makefile limpar os ficheiros criados usando \verb|make clean|.
 
 \section{Conclusão}
+Em conclusão, o resultado obtido foi bom, visto que é possível visualizar o trajeto presente no GPX no Google Earth, etc através da importação do ficheiro KML gerado pelo conversor. Contudo, de modo a melhorar o conversor, poderiamos realizar a conversão das restantes tags do GPX para KML. É importante concluir também que devido ao uso do FLEX com os seus poderosos mecanismos tais como as condições de contexto, permitiu que a resolução do problema fosse mais rápido de obter, mais simples e com bem menos linhas de código, mantendo-se contudo de fácil interpretação.
 
 \appendix
 \section{Código do Programa}
