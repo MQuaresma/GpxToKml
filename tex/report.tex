@@ -34,15 +34,30 @@ De modo a compreender-se melhor o que foi desenvolvido é importante conhecer as
 
 Em relação à estrutura do GPX é importante referir que:
 \begin{itemize}
+    \item \verb|<gpx creator="..." version=".." ..>| raiz do documento XML, indica as versões(\textit{standards}) dos diversos campos presentes no documento
+    \item \verb|<metadata>| contém informação sobre o documento GPX: autor do documento, altura de criação, restrições de direito de autor, altura de criação entre outros, etc
+    \item \verb|<wpt lat="..." lon="...">| representa um \textit{waypoint} definido  localizado nas coordenadas dadas
+        \subitem \verb|<name>| indica o nome do waypoint referido
+        \subitem \verb|<time>| indica o timestamp referente à passagem no waypoint
+        \subitem \verb|<ele>| indica a altitude do waypoint
+        \subitem \verb|<desc>| breve descrição do waypoint
+    \item \verb|<trk>| representa um \textit{track} \textbf{i.e.} um conjunto de pontos que compõem um percurso
+        \subitem \verb|<name>| indica o nome do percurso
+        \subitem \verb|<desc>| descrição do percuro
+        \subitem \verb|<type>| indica o tipo de percurso a que se refere(caminhada, ciclismo, etc)
+        \subitem \verb|<extensions>| contém informações adicionais como distancia, desnível positivo/negativo, calorias queimadas
+    \item \verb|<trkseg>| representa um segmento contínuo de pontos
+        \subitem \verb|<trkpt lat="..." lon="...">| ponto constituinte do segmento com as coordenadas indicadas
     \item
+        
 \end{itemize}
 
 Já em relação à estrutura do KML é de destacar o seguinte:
 \begin{itemize}
-    \item \verb|<?xml version="1.0" encoding="utf-8"?>|: indica a versão do XML e a condificação 
+    \item \verb|<?xml version="1.0" encoding="utf-8"?>|: indica a versão do XML e a encodificação 
     \item \verb|<kml xmlns="http://www.opengis.net/kml/2.2">|: indica a versão do KML usado, pode ser também adicionado extensões dentro da tag
     \item \verb|<Placemark>|: representa como o próprio nome indica um marcador de um local/trilho/ponto/etc
-    \item \verb|<name>|: presente tanto do \verb|<Document>| como no \verb|<Placemark>| permite dar um nome ao documento ou ao local respetivamente
+    \item \verb|<name>|: presente tanto no \verb|<Document>| como no \verb|<Placemark>| permite dar um nome ao documento ou ao local respetivamente
     \item \verb|<description>|: como o nome permite descrever/caracterizar o \verb|<Document>| ou o \verb|<Placemark>|
     \item \verb|<LineString>|: permite representar um caminho/trilho, deve estar dentro da tag \verb|<Placemark>|
     \item \verb|<Point>|: permite representar um ponto/marco no mapa, deve estar dentro da tag \verb|<Placemark>|
