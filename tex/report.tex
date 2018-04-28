@@ -25,11 +25,12 @@ De modo a converter um ficheiro GPX (GPS Exchange Format) para KML (Keyhole Mark
 \end{abstract}
 
 \section{Estrutura do Relatório}
+Após realizar a introdução, iremos explicar as estruturas/tags dos diferentes ficheiros/linguagens (GPX,KML) no Preâmbulo. De seguida é explicado de forma sucinta o problema presente, para de seguida apresentar a solução por nós proposta. Será depois apresentado como executar e possiveis testes a realizar. Por fim, será concluído os resultados bem como avaliar o trabalho desenvolvido.
 
 \section{Introdução}
 
 \section{Preâmbulo}\label{pb}
-De modo a compreender-se melhor o que foi desenvolvido é importante conhecer as estruturas (tags) dos dois tipos. Os dois são baseados no XML (Extensible Markup Language) e como tal tem algumas parecências mudando principalmente as tags e os seus significados.
+De modo a compreender-se melhor o que foi desenvolvido é importante conhecer as estruturas (tags) dos dois tipos. Os dois são baseados no XML (Extensible Markup Language) e como tal tem algumas parecências mudando principalmente as tags e os seus significados. 
 
 Em relação à estrutura do GPX é importante referir que:
 \begin{itemize}
@@ -50,7 +51,6 @@ Já em relação à estrutura do KML é de destacar o seguinte:
 \end{itemize}
 
 \section{Análise e especificação}
-Explicar o que foi realizado, estruturas usadas e usage
 
 \subsection{Descrição informal do problema}
 O problema consiste na conversão de um ficheiro GPX, gerado principalmente por navegadores GPS, para um ficheiro KML, criado e mantido pela gigante Google. Isto envolve conhecer as tags e estruturas de cada ``linguagem'' algo que já foi abordado no preâmbulo. A maior dificuldade reside no facto de que existe tags presentes numa linguagem que não existe na outra e vice-versa, e isso cria um problema de decisão, ou seja, é necessário escolher a tag que melhor representa a informação presente no ficheiro do qual partimos.
@@ -58,6 +58,7 @@ O problema consiste na conversão de um ficheiro GPX, gerado principalmente por 
 \subsection{Especificação do Requisitos}
 
 \section{Concepção/desenho da Resolução}
+
 \subsection{Estruturas usadas}
 
 \subsection{Algoritmos(Lógica)}
@@ -78,6 +79,14 @@ De modo a testar deve-se usar o programa preferencialmente da seguinte maneira:
     \item Compilar o ficheiro lex.yy.c: \verb|gcc -o gpxToKml lex.yy.c|
     \item Executar: \verb|./gpxToKml < ficheiroInput.gpx > ficheiroOutput.kml|
 \end{itemize}
+
+Ou, devido à existência de uma Makefile realizar simplesmente:
+\begin{itemize}
+    \item \verb|make install|
+    \item \verb|./gpxToKml < ficheiroInput.gpx > ficheiroOutput.kml|
+\end{itemize}
+
+Sendo também possivel com a Makefile limpar os ficheiros criados usando \verb|make clean|.
 
 \section{Conclusão}
 
