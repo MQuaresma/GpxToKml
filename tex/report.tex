@@ -21,17 +21,17 @@ e-mail: \{a78821,a77049\}@alunos.uminho.pt
 \justify
 
 \begin{abstract}
-De modo a converter um ficheiro GPX (GPS Exchange Format) para KML (Keyhole Markup Language) foi usado o FLEX (fast lexical analyzer generator). Esta conversão permite que a partir de ficheiros gerados pelos gps's por exemplo seja possível ver o conteúdo guardado pelo mesmo no Google Earth (Maps.me, etc).
+    Formatos como \textbf{GPX} (GPS Exchange Format) e \textbf{KML} (Keyhole Markup Language) são usados na representação de dados geográficos no entanto estes apresentam propósitos diferentes e, consequentemente, estruturas diferentes. Este relatório documenta o desenvolvimento de um conversor entre ficheiros GPX e ficheiros KML usando, para isso, o analisador léxico \textbf{Flex} (fast lexical analyzer generator). O conversor deve gerar ficheiros (KML) que possam ser inspeccionados com recurso a ferramentas como Google Earth, Maps.me, etc.
 \end{abstract}
 
 \section{Estrutura do Relatório}
-Após realizar a introdução, iremos explicar as estruturas/tags dos diferentes ficheiros/linguagens (GPX,KML) no Preâmbulo. De seguida é explicado de forma sucinta o problema presente, para de seguida apresentar a solução por nós proposta. Será depois apresentado como executar e possiveis testes a realizar. Por fim, será concluído os resultados bem como avaliar o trabalho desenvolvido.
+Após uma breve introdução serão apresentadas as estruturas dos diferentes ficheiros GPX e KML (no Preâmbulo). De seguida é explicado, de forma sucinta, o problema presente para, de seguida, apresentar a solução por nós proposta. Finalmente, e após demoonstrar exemplos de uso e os casos de teste, será apresentada uma breve conclusão em relação aos resultados ao trabalho desenvolvido.
 
 \section{Introdução}
-Para realizar a conversão de tipos foi usado o FLEX, uma ferramenta poderosa que permite criar analisadores léxicos de modo a reconhecer padrões no input e consoante o padrão agir de acordo com ele produzindo ou não output, dependendo do que é pretendido. É importante também destacar que caso não fosse usado o FLEX seria muito complicado implementar algo que desse os mesmos resultados, demorando muito mais tempo a implementar, até porque a deteção de padrões não é algo simples.
+A conversão entre tipos foi feita usando o FLEX, uma ferramenta poderosa que permite criar analisadores léxicos de modo a reconhecer padrões no input e, consoante o padrão, tratar os dados de determinada maneira tendo em conta o resultado pretendido. É importante destacar que o uso  de uma ferramenta como o FLEX simplifica o processo de desenvolvimento visto que a complexidade de implementar algo que desse os mesmos resultados e o tempo de implementação seria consideravelmente superior dado a complexidade de código de deteção de padrões.
 
 \section{Preâmbulo}\label{pb}
-De modo a compreender-se melhor o que foi desenvolvido é importante conhecer as estruturas (tags) dos dois tipos. Os dois são baseados no XML (Extensible Markup Language) e como tal tem algumas parecências mudando principalmente as tags e os seus significados. 
+De modo a compreender-se melhor o que foi desenvolvido é importante conhecer as estruturas (tags) dos dois tipos de ficheiros. Ambos são baseados em XML (Extensible Markup Language) e como tal apresentam algumas semelhanças, diferindo maioritariamente nas tags e os seus significados. 
 
 Em relação à estrutura do GPX é importante referir que:
 \begin{itemize}
@@ -69,27 +69,25 @@ Já em relação à estrutura do KML é de destacar o seguinte:
 \section{Análise e especificação}
 
 \subsection{Descrição informal do problema}
-O problema consiste na conversão de um ficheiro GPX, gerado principalmente por navegadores GPS, para um ficheiro KML, criado e mantido pela gigante Google. Isto envolve conhecer as tags e estruturas de cada ``linguagem'' algo que já foi abordado no preâmbulo. A maior dificuldade reside no facto de que existe tags presentes numa linguagem que não existe na outra e vice-versa, e isso cria um problema de decisão, ou seja, é necessário escolher a tag que melhor representa a informação presente no ficheiro do qual partimos.
-
-\subsection{Especificação do Requisitos}
+O problema consiste na conversão de um ficheiro GPX, gerado por navegadores GPS, para um ficheiro KML, criado e mantido pela gigante Google. Isto envolve conhecer a estrutura de cada ``linguagem''(\ref{pb}). A maior dificuldade reside no facto de que existem tags presentes numa linguagem que não existem na outra e vice-versa, criando um problema de decisão e levando a que seja necessário escolher a tag que melhor representa a informação presente no ficheiro de origem.
 
 \section{Concepção/desenho da Resolução}
 
 \subsection{Estruturas usadas}
 
 \subsection{Algoritmos(Lógica)}
-De certa maneira o que é realizado é sempre que algo aparece (condição) realizamos uma ação, neste caso escrever para um ficheiro algo que corresponda com o match da condição. Contudo devido às diferentes tags entre os dois tipos, nem sempre é assim tão simples obrigando a algumas estratégias.
+De certa maneira o que é realizado é sempre que algo aparece (condição) realizamos uma ação, neste caso escrever para um ficheiro algo que corresponda com o match da condição. Contudo, devido às diferentes tags entre os dois tipos, esta conversão nem sempre é imediata/trivial e exige o recurso a estratégias que serão explicitadas de seguida.
 
-Uma das estratégias é o uso de condições de contexto de modo a isolar secções nas situações em que por exemplo existe a mesma tag contudo dentro de tags diferentes, representando coisas diferentes. Ajuda-nos também a estruturar melhor o código, bem como simplifica-o por vezes.
+Uma das estratégias referidas é o uso de condições de contexto de modo a isolar as diferentes secções nas situações em que, por exemplo, existem tags do mesmo tipo mas que são "filhas" de tags diferentes, representando coisas diferentes. Estas condições de contexto permitem ainda o desenvolvimento de um código mais conciso e, em determinados casos, mais simples.
 
-Outra estratégia foi o uso de uma stack de modo a sabermos em que condição de contexto estavamos antes de entrar numa nova condição de contexto de modo a sabermos para onde voltar ao sair dessa condição, derivado do facto de se puder entrar nesta nova condição por condições de contexto diferentes. Um exemplo disto é a condição de contexto LINK e a sua stack \textit{stackLink}.
+Outra estratégia foi o uso de uma stack que permite manter um registo sobre as condições de contexto anteriores à atual de modo a permitir que as mudanças de contexto ocorram sem ambiguidades derivadas da exitência de múltiplos pontos de entrada para determinadas condições de contexto. Um exemplo disto é a condição de contexto LINK e a sua stack \textit{stackLink}.
 
-Por fim outra estratégia usada, foi o uso de um ``boolean'' na condição de contexto METADATA visto que, como a tag name do GPX presente no mesmo deve ficar fora da tag description do KML e que os restantes casos do mesmo(METADATA) devem ficar dentro da tag description este boolean foi usado de modo a sabermos se já tinha sido ou não imprimido no ficheiro \verb|<description>| e em caso negativo fazê-lo. Caso já se tenha imprimido \verb|<description>| e apareça a tag name ela é ignorada e não é imprimida de modo a não criar incongruências.
+Por fim outra estratégia usada, foi o uso de um ``boolean'' na condição de contexto METADATA visto que, como a tag \texttt{name} do GPX deve ficar fora da tag description do KML e que os restantes casos do mesmo(METADATA) devem ficar dentro da tag description este boolean foi usado de modo a sabermos se já tinha sido no ficheiro \verb|<description>| e em caso negativo fazê-lo. Caso já se tenha imprimido \verb|<description>| e apareça a tag name esta é ignorada e não é imprimida de modo a não criar incongruências.
 
 \section{Codificação e Testes}
-Com o objetivo de testar o programa criado em FLEX, foram transferidos ficheiros presentes em https://www.openstreetmap.org/traces (2673775.gpx, 2673778.gpx, 2673781.gpx, 2684029.gpx, 2684078.gpx) bem como alguns pessoais (Small.gpx, Route.gpx).
+Com o objetivo de testar a ferramente desenvolvida foram transferidos alguns ficheiros presentes em https://www.openstreetmap.org/traces (2673775.gpx, 2673778.gpx, 2673781.gpx, 2684029.gpx, 2684078.gpx) bem como algumas rotas desenvolvidas com recurso à ferramenta \textbf{Strava} (Small.gpx, Route.gpx).
 
-De modo a testar deve-se usar o programa preferencialmente da seguinte maneira:
+De seguida apresenta-se o processo recomendado para testar a ferramente desenvolvida:
 \begin{itemize}
     \item Compilar o ficheiro gpxToKml.l com o FLEX: \verb|flex gpxToKml.l|
     \item Compilar o ficheiro lex.yy.c: \verb|gcc -o gpxToKml lex.yy.c|
@@ -104,7 +102,7 @@ Ou, devido à existência de uma Makefile realizar simplesmente:
     \item Importar para o Google Earth, etc
 \end{itemize}
 
-Sendo também possivel com a Makefile limpar os ficheiros criados usando \verb|make clean|.
+Sendo também possível, com a Makefile, limpar os ficheiros criados usando \verb|make clean|.
 
 \section{Conclusão}
 Em conclusão, o resultado obtido foi bom, visto que é possível visualizar o trajeto presente no GPX no Google Earth, etc através da importação do ficheiro KML gerado pelo conversor. Contudo, de modo a melhorar o conversor, poderiamos realizar a conversão das restantes tags do GPX para KML. É importante concluir também que devido ao uso do FLEX com os seus poderosos mecanismos tais como as condições de contexto, permitiu que a resolução do problema fosse mais rápido de obter, mais simples e com bem menos linhas de código, mantendo-se contudo de fácil interpretação.
