@@ -72,6 +72,7 @@ Já em relação à estrutura do KML é de destacar o seguinte:
 O problema consiste na conversão de um ficheiro GPX, gerado por navegadores GPS, para um ficheiro KML, criado e mantido pela gigante Google. Isto envolve conhecer a estrutura de cada ``linguagem''(conf. sec. \ref{pb}). A maior dificuldade reside no facto de que existem tags presentes numa linguagem que não existem na outra e vice-versa, criando um problema de decisão e levando a que seja necessário escolher a tag que melhor representa a informação presente no ficheiro de origem.
 
 \subsection{Especificação do Requisitos}
+A ferramenta desenvolvida deve ser capaz de reconhecer os elementos fundamentais que constituem o formato GPX (\verb|wpt,trk,trkseg,trkpt|) e convertê-los para o equivalente (quando possível) na representação KML. Para além disto a ferramenta deve permitir a fácil adição de padrões para diferentes versões de GPX(modularidade), tendo em conta informações adicionais que este tipo de ficheiro possa conter (\verb|ele, type, extensions|).
 
 \section{Concepção/desenho da Resolução}
 \subsection{Algoritmos(Lógica)}
@@ -110,7 +111,7 @@ Ou, devido à existência de uma Makefile realizar simplesmente:
 Sendo também possível, com a Makefile, limpar os ficheiros criados usando \verb|make clean|.
 
 \section{Conclusão}
-Em conclusão, o resultado obtido foi bom, visto que é possível visualizar o trajeto presente no GPX no Google Earth, etc através da importação do ficheiro KML gerado pelo conversor. Contudo, de modo a melhorar o conversor, poderiamos realizar a conversão das restantes tags do GPX para KML. É importante concluir também que devido ao uso do FLEX com os seus poderosos mecanismos tais como as condições de contexto, permitiu que a resolução do problema fosse mais rápido de obter, mais simples e com bem menos linhas de código, mantendo-se contudo de fácil interpretação.
+Em conclusão, o resultado obtido foi bom, visto que é possível visualizar o trajeto presente no GPX em ferramentas como o Google Earth e Maps.me através da importação do ficheiro KML gerado pelo conversor. Contudo, de modo a melhorar o conversor, poderíamos realizar a conversão das restantes tags do GPX para KML. É importante concluir também que, devido ao uso do FLEX com os seus poderosos mecanismos tais como as condições de contexto, permitiu que a resolução do problema fosse mais rápida, simples e com um número relativamente reduzido de linhas de código face a complexidade do problema. Alguns das funcionalidades adicionais que esta ferramente poderia implementar seria a conversão de ficheiros TCX para KML bem como a conversão de ficheiros no sentido reverso. 
 
 \section{Lista de Siglas e Acrónimos}
 \begin{itemize}
