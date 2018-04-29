@@ -87,11 +87,12 @@ Outra estratégia foi o uso de uma stack que permite manter um registo sobre as 
 
 Por fim outra estratégia usada, foi o uso de um ``boolean'' na condição de contexto METADATA visto que, como a tag \texttt{name} do GPX deve ficar fora da tag description do KML e que os restantes casos do mesmo(METADATA) devem ficar dentro da tag description este boolean foi usado de modo a sabermos se já tinha sido imprimido no ficheiro \verb|<description>| e em caso negativo fazê-lo. Caso já se tenha imprimido \verb|<description>| e apareça a tag name esta é ignorada e não é imprimida de modo a não criar incongruências.
 
-É de registar que a latitude e longitude (coordenadas) se encontra em ordens distintas nos diferentes documentos sendo, por isso, necessário armazenar o valor da latitude
-\verb|lat=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {tmp=strndup(yytext+5,strlen(yytext+5)-1);}|
-e imprimi-lo quando é encontrado o valor referente à longitude, assegurando que este(valor da latitude) é impresso a seguir ao mesmo(valor da longitude):
-\verb|lon=\"[-+]?[0-9]+(\.[0-9]+)?\"                     {printf("%s,%s,",strndup(yytext+5,strlen(yytext+5)-1),tmp);}|
-
+É de registar que a latitude e longitude (coordenadas) se encontra em ordens distintas nos diferentes documentos sendo, por isso, necessário armazenar o valor da latitude \\
+\verb|lat=\"[-+]?[0-9]+(\.[0-9]+)?\"  {tmp=strndup(yytext+5,strlen(yytext+5)-1);}|
+e imprimi-lo quando é encontrado o valor referente à longitude, assegurando que este(valor da latitude) é impresso a seguir ao mesmo(valor da longitude): 
+\begin{changemargin}{-1cm}{0cm}
+\verb|lon=\"[-+]?[0-9]+(\.[0-9]+)?\"  {printf("%s,%s,",strndup(yytext+5,strlen(yytext+5)-1),tmp);}|
+\end{changemargin}
 
 \section{Codificação e Testes}
 Com o objetivo de testar a ferramente desenvolvida foram transferidos alguns ficheiros presentes em https://www.openstreetmap.org/traces (2673775.gpx, 2673778.gpx, 2673781.gpx, 2684029.gpx, 2684078.gpx) bem como algumas rotas desenvolvidas com recurso à ferramenta \textbf{Strava} (Small.gpx, Route.gpx).
@@ -134,7 +135,6 @@ TCX \> Training Center XML
 \begin{verbatim}
 %option main
 %x TRACKPOINTS TRACKPOINT DESCRIPTION WAYPOINT METADATA AUTHOR LINK COPYRIGHT BOUNDS
-
 %{
 void printHead();
 void printFinal();
@@ -205,7 +205,6 @@ maxlat=\"[-+]?[0-9]+(\.[0-9]+)?/\"      {printf("MaxLatitude: %s ",yytext+8);}
 maxlon=\"[-+]?[0-9]+(\.[0-9]+)?/\"      {printf("MaxLongitude: %s ",yytext+8);}
 \/\>                                    {BEGIN METADATA; printf("\n");}
 }
-
 
 <WAYPOINT>{
 \<name\>(.*)?\<\/name\>                     {printf("%s\n",yytext);}
