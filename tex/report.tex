@@ -25,7 +25,7 @@ e-mail: \{a78821,a77049\}@alunos.uminho.pt
 \end{abstract}
 
 \section{Estrutura do Relatório}
-Após uma breve introdução serão apresentadas as estruturas dos diferentes ficheiros GPX e KML (no Preâmbulo). De seguida é explicado, de forma sucinta, o problema presente para, de seguida, apresentar a solução por nós proposta. Finalmente, e após demoonstrar exemplos de uso e os casos de teste, será apresentada uma breve conclusão em relação aos resultados ao trabalho desenvolvido.
+Após uma breve introdução serão apresentadas as estruturas dos diferentes ficheiros GPX e KML (no Preâmbulo). De seguida é explicado, de forma sucinta, o problema presente para, de seguida, apresentar a solução por nós proposta. Finalmente, e após demonstrar exemplos de uso e os casos de teste, será apresentada uma breve conclusão em relação aos resultados do trabalho desenvolvido.
 
 \section{Introdução}
 A conversão entre tipos foi feita usando o FLEX, uma ferramenta poderosa que permite criar analisadores léxicos de modo a reconhecer padrões no input e, consoante o padrão, tratar os dados de determinada maneira tendo em conta o resultado pretendido. É importante destacar que o uso  de uma ferramenta como o FLEX simplifica o processo de desenvolvimento visto que a complexidade de implementar algo que desse os mesmos resultados e o tempo de implementação seria consideravelmente superior dado a complexidade de código de deteção de padrões.
@@ -47,8 +47,10 @@ Em relação à estrutura do GPX é importante referir que:
         \subitem \verb|<desc>| descrição do percuro
         \subitem \verb|<type>| indica o tipo de percurso a que se refere(caminhada, ciclismo, etc)
         \subitem \verb|<extensions>| contém informações adicionais como distancia, desnível positivo/negativo, calorias queimadas
-    \item \verb|<trkseg>| representa um segmento contínuo de pontos
-        \subitem \verb|<trkpt lat="..." lon="...">| ponto constituinte do segmento com as coordenadas indicadas
+        \subitem \verb|<trkseg>| representa um segmento contínuo de pontos
+            \begin{itemize}
+                \item \verb|<trkpt lat="..." lon="...">| ponto constituinte do segmento com as coordenadas indicadas
+            \end{itemize}
 \end{itemize}
 
 Já em relação à estrutura do KML é de destacar o seguinte:
@@ -80,7 +82,7 @@ Uma das estratégias referidas é o uso de condições de contexto de modo a iso
 
 Outra estratégia foi o uso de uma stack que permite manter um registo sobre as condições de contexto anteriores à atual de modo a permitir que as mudanças de contexto ocorram sem ambiguidades derivadas da exitência de múltiplos pontos de entrada para determinadas condições de contexto. Um exemplo disto é a condição de contexto LINK e a sua stack \textit{stackLink}.
 
-Por fim outra estratégia usada, foi o uso de um ``boolean'' na condição de contexto METADATA visto que, como a tag \texttt{name} do GPX deve ficar fora da tag description do KML e que os restantes casos do mesmo(METADATA) devem ficar dentro da tag description este boolean foi usado de modo a sabermos se já tinha sido no ficheiro \verb|<description>| e em caso negativo fazê-lo. Caso já se tenha imprimido \verb|<description>| e apareça a tag name esta é ignorada e não é imprimida de modo a não criar incongruências.
+Por fim outra estratégia usada, foi o uso de um ``boolean'' na condição de contexto METADATA visto que, como a tag \texttt{name} do GPX deve ficar fora da tag description do KML e que os restantes casos do mesmo(METADATA) devem ficar dentro da tag description este boolean foi usado de modo a sabermos se já tinha sido imprimido no ficheiro \verb|<description>| e em caso negativo fazê-lo. Caso já se tenha imprimido \verb|<description>| e apareça a tag name esta é ignorada e não é imprimida de modo a não criar incongruências.
 
 \section{Codificação e Testes}
 Com o objetivo de testar a ferramente desenvolvida foram transferidos alguns ficheiros presentes em https://www.openstreetmap.org/traces (2673775.gpx, 2673778.gpx, 2673781.gpx, 2684029.gpx, 2684078.gpx) bem como algumas rotas desenvolvidas com recurso à ferramenta \textbf{Strava} (Small.gpx, Route.gpx).
@@ -105,7 +107,7 @@ Sendo também possível, com a Makefile, limpar os ficheiros criados usando \ver
 \section{Conclusão}
 Em conclusão, o resultado obtido foi bom, visto que é possível visualizar o trajeto presente no GPX no Google Earth, etc através da importação do ficheiro KML gerado pelo conversor. Contudo, de modo a melhorar o conversor, poderiamos realizar a conversão das restantes tags do GPX para KML. É importante concluir também que devido ao uso do FLEX com os seus poderosos mecanismos tais como as condições de contexto, permitiu que a resolução do problema fosse mais rápido de obter, mais simples e com bem menos linhas de código, mantendo-se contudo de fácil interpretação.
 
-\section(Lista de Siglas e Acrónimos)
+\section{Lista de Siglas e Acrónimos}
 \begin{itemize}
     \item GPX   GPS Exchange Format
     \item KML   Keyhole Markup Language
