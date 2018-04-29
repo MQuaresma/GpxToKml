@@ -21,7 +21,7 @@ e-mail: \{a78821,a77049\}@alunos.uminho.pt
 \justify
 
 \begin{abstract}
-    Formatos como \textbf{GPX} (GPS Exchange Format) e \textbf{KML} (Keyhole Markup Language) são usados na representação de dados geográficos no entanto estes apresentam propósitos diferentes e, consequentemente, estruturas diferentes. Este relatório documenta o desenvolvimento de um conversor entre ficheiros GPX e ficheiros KML usando, para isso, o analisador léxico \textbf{Flex} (fast lexical analyzer generator). O conversor deve gerar ficheiros (KML) que possam ser inspeccionados com recurso a ferramentas como Google Earth, Maps.me, etc.
+    Formatos como \textbf{GPX} e \textbf{KML} são usados na representação de dados geográficos no entanto estes apresentam propósitos diferentes e, consequentemente, estruturas diferentes. Este relatório documenta o desenvolvimento de um conversor entre ficheiros GPX e ficheiros KML usando, para isso, o analisador léxico \textbf{Flex}. O conversor deve gerar ficheiros (KML) que possam ser inspeccionados com recurso a ferramentas como Google Earth, Maps.me, etc.
 \end{abstract}
 
 \section{Estrutura do Relatório}
@@ -49,8 +49,6 @@ Em relação à estrutura do GPX é importante referir que:
         \subitem \verb|<extensions>| contém informações adicionais como distancia, desnível positivo/negativo, calorias queimadas
     \item \verb|<trkseg>| representa um segmento contínuo de pontos
         \subitem \verb|<trkpt lat="..." lon="...">| ponto constituinte do segmento com as coordenadas indicadas
-    \item
-        
 \end{itemize}
 
 Já em relação à estrutura do KML é de destacar o seguinte:
@@ -59,7 +57,7 @@ Já em relação à estrutura do KML é de destacar o seguinte:
     \item \verb|<kml xmlns="http://www.opengis.net/kml/2.2">|: indica a versão do KML usado, pode ser também adicionado extensões dentro da tag
     \item \verb|<Placemark>|: representa como o próprio nome indica um marcador de um local/trilho/ponto/etc
     \item \verb|<name>|: presente tanto no \verb|<Document>| como no \verb|<Placemark>| permite dar um nome ao documento ou ao local respetivamente
-    \item \verb|<description>|: como o nome permite descrever/caracterizar o \verb|<Document>| ou o \verb|<Placemark>|
+    \item \verb|<description>|: permite descrever/caracterizar o \verb|<Document>| ou o \verb|<Placemark>|
     \item \verb|<LineString>|: permite representar um caminho/trilho, deve estar dentro da tag \verb|<Placemark>|
     \item \verb|<Point>|: permite representar um ponto/marco no mapa, deve estar dentro da tag \verb|<Placemark>|
     \item \verb|<coordinates>|: é aqui adicionado as coordenadas e alturas de cada ponto do caminho a ser ``desenhado'' no caso de estar dentro de uma tag \verb|<LineString>|, caso esteja dentro de um \verb|<Point>| permite indicar a localização e altura do ponto, sendo que a organização é longitude,latitude,altura por cada linha
@@ -106,6 +104,15 @@ Sendo também possível, com a Makefile, limpar os ficheiros criados usando \ver
 
 \section{Conclusão}
 Em conclusão, o resultado obtido foi bom, visto que é possível visualizar o trajeto presente no GPX no Google Earth, etc através da importação do ficheiro KML gerado pelo conversor. Contudo, de modo a melhorar o conversor, poderiamos realizar a conversão das restantes tags do GPX para KML. É importante concluir também que devido ao uso do FLEX com os seus poderosos mecanismos tais como as condições de contexto, permitiu que a resolução do problema fosse mais rápido de obter, mais simples e com bem menos linhas de código, mantendo-se contudo de fácil interpretação.
+
+\section(Lista de Siglas e Acrónimos)
+\begin{itemize}
+    \item GPX   GPS Exchange Format
+    \item KML   Keyhole Markup Language
+    \item Flex  fast lexical analyzer generator
+    \item GPS   Global Positioning System
+    \item XML   Extensible Markup Language
+\end{itemize}
 
 \appendix
 \section{Código do Programa}
