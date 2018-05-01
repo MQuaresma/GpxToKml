@@ -94,6 +94,23 @@ e imprimi-lo quando é encontrado o valor referente à longitude, assegurando qu
 \verb|lon=\"[-+]?[0-9]+(\.[0-9]+)?\"  {printf("%s,%s,",strndup(yytext+5,strlen(yytext+5)-1),tmp);}|
 \end{changemargin}
 
+De modo a concluir esta secção é também de referir que escolhas foram realizadas consoante a tag do GPX, e as mesmas foram:
+\begin{itemize}
+    \item dentro da tag \verb|<metadata>|: tudo será colocado na tag \verb|descriprtion| com a exceção do \verb|<name>| que será na tag \verb|<name>|
+    \item dentro da tag \verb|waypoint|
+        \begin{itemize}
+            \item \verb|<name>|: será também a tag \verb|<name>|
+            \item \verb|<desc>|: será na tag \verb|<description>|
+            \item os atributos lat e long e a \verb|<ele>|: serão na tag \verb|<coordinates>| pela ordem lon,lat,ele
+        \end{itemize}
+    \item dentro da tag \verb|<trkseg>|
+        \begin{itemize}
+            \item \verb|<name>|: será também a tag \verb|<name>|
+            \item \verb|<extensions|: na tag \verb|<description>|
+            \item os atributos lat e lon de cada \verb|<trkpt>| e o \verb|<ele>|: serão na tag \verb|<coordinates>| pela ordem lon,lat,ele
+        \end{itemize}
+\end{itemize}
+
 \section{Codificação e Testes}
 Com o objetivo de testar a ferramente desenvolvida foram transferidos alguns ficheiros presentes em https://www.openstreetmap.org/traces (2673775.gpx, 2673778.gpx, 2673781.gpx, 2684029.gpx, 2684078.gpx) bem como algumas rotas desenvolvidas com recurso à ferramenta \textbf{Strava} (Small.gpx, Route.gpx).
 
